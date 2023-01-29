@@ -1,3 +1,4 @@
+#if 0
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : ble_uart_service_same_16bit_char.c
  * Author             : WCH
@@ -14,7 +15,7 @@
  * INCLUDES
  */
 
-#include "CONFIG.h"
+#include "config.h"
 #include "gattprofile.h"
 #include "stdint.h"
 #include "ble_uart_service.h"
@@ -394,3 +395,4 @@ bStatus_t ble_uart_notify(uint16 connHandle, attHandleValueNoti_t *pNoti, uint8 
 
 /*********************************************************************
 *********************************************************************/
+#endif
