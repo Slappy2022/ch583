@@ -79,4 +79,4 @@ $(SIZ_FILE): $(ELF_FILE)
 
 .PHONY: clean
 clean:
-	rm -f $(OUTPUT_DIR)/*
+	rm -rf $(OUTPUT_DIR)/*

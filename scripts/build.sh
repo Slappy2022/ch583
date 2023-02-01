@@ -19,7 +19,7 @@ main() {
   docker run -i \
     -v "${BASE_DIR}/"Build:"${EXAM_DIR}"/Build \
     --workdir "${EXAM_DIR}/$1" \
-    -t "${TAG}" make
+    -t "${TAG}" make clean all
 }
 
 main "$@"
