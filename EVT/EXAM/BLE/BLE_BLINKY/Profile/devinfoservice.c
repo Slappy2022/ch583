@@ -13,7 +13,8 @@
 /*********************************************************************
  * INCLUDES
  */
-#include "config.h"
+#include <stdint.h>
+#include "CH58xBLE_LIB.h"
 #include "devinfoservice.h"
 
 /*********************************************************************
@@ -32,43 +33,43 @@
  * GLOBAL VARIABLES
  */
 // Device information service
-CONST uint8 devInfoServUUID[ATT_BT_UUID_SIZE] = {
+const uint8_t devInfoServUUID[ATT_BT_UUID_SIZE] = {
     LO_UINT16(DEVINFO_SERV_UUID), HI_UINT16(DEVINFO_SERV_UUID)};
 
 // System ID
-CONST uint8 devInfoSystemIdUUID[ATT_BT_UUID_SIZE] = {
+const uint8_t devInfoSystemIdUUID[ATT_BT_UUID_SIZE] = {
     LO_UINT16(SYSTEM_ID_UUID), HI_UINT16(SYSTEM_ID_UUID)};
 
 // Model Number String
-CONST uint8 devInfoModelNumberUUID[ATT_BT_UUID_SIZE] = {
+const uint8_t devInfoModelNumberUUID[ATT_BT_UUID_SIZE] = {
     LO_UINT16(MODEL_NUMBER_UUID), HI_UINT16(MODEL_NUMBER_UUID)};
 
 // Serial Number String
-CONST uint8 devInfoSerialNumberUUID[ATT_BT_UUID_SIZE] = {
+const uint8_t devInfoSerialNumberUUID[ATT_BT_UUID_SIZE] = {
     LO_UINT16(SERIAL_NUMBER_UUID), HI_UINT16(SERIAL_NUMBER_UUID)};
 
 // Firmware Revision String
-CONST uint8 devInfoFirmwareRevUUID[ATT_BT_UUID_SIZE] = {
+const uint8_t devInfoFirmwareRevUUID[ATT_BT_UUID_SIZE] = {
     LO_UINT16(FIRMWARE_REV_UUID), HI_UINT16(FIRMWARE_REV_UUID)};
 
 // Hardware Revision String
-CONST uint8 devInfoHardwareRevUUID[ATT_BT_UUID_SIZE] = {
+const uint8_t devInfoHardwareRevUUID[ATT_BT_UUID_SIZE] = {
     LO_UINT16(HARDWARE_REV_UUID), HI_UINT16(HARDWARE_REV_UUID)};
 
 // Software Revision String
-CONST uint8 devInfoSoftwareRevUUID[ATT_BT_UUID_SIZE] = {
+const uint8_t devInfoSoftwareRevUUID[ATT_BT_UUID_SIZE] = {
     LO_UINT16(SOFTWARE_REV_UUID), HI_UINT16(SOFTWARE_REV_UUID)};
 
 // Manufacturer Name String
-CONST uint8 devInfoMfrNameUUID[ATT_BT_UUID_SIZE] = {
+const uint8_t devInfoMfrNameUUID[ATT_BT_UUID_SIZE] = {
     LO_UINT16(MANUFACTURER_NAME_UUID), HI_UINT16(MANUFACTURER_NAME_UUID)};
 
 // IEEE 11073-20601 Regulatory Certification Data List
-CONST uint8 devInfo11073CertUUID[ATT_BT_UUID_SIZE] = {
+const uint8_t devInfo11073CertUUID[ATT_BT_UUID_SIZE] = {
     LO_UINT16(IEEE_11073_CERT_DATA_UUID), HI_UINT16(IEEE_11073_CERT_DATA_UUID)};
 
 // PnP ID
-CONST uint8 devInfoPnpIdUUID[ATT_BT_UUID_SIZE] = {
+const uint8_t devInfoPnpIdUUID[ATT_BT_UUID_SIZE] = {
     LO_UINT16(PNP_ID_UUID), HI_UINT16(PNP_ID_UUID)};
 
 /*********************************************************************
@@ -88,47 +89,47 @@ CONST uint8 devInfoPnpIdUUID[ATT_BT_UUID_SIZE] = {
  */
 
 // Device Information Service attribute
-static CONST gattAttrType_t devInfoService = {ATT_BT_UUID_SIZE, devInfoServUUID};
+static const gattAttrType_t devInfoService = {ATT_BT_UUID_SIZE, devInfoServUUID};
 
 // System ID characteristic
-static uint8 devInfoSystemIdProps = GATT_PROP_READ;
-static uint8 devInfoSystemId[DEVINFO_SYSTEM_ID_LEN] = {0, 0, 0, 0, 0, 0, 0, 0};
+static uint8_t devInfoSystemIdProps = GATT_PROP_READ;
+static uint8_t devInfoSystemId[DEVINFO_SYSTEM_ID_LEN] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 // Model Number String characteristic
-static uint8       devInfoModelNumberProps = GATT_PROP_READ;
-static const uint8 devInfoModelNumber[] = "Model Number";
+static uint8_t       devInfoModelNumberProps = GATT_PROP_READ;
+static const uint8_t devInfoModelNumber[] = "Model Number";
 
 // Serial Number String characteristic
-static uint8       devInfoSerialNumberProps = GATT_PROP_READ;
-static const uint8 devInfoSerialNumber[] = "Serial Number";
+static uint8_t       devInfoSerialNumberProps = GATT_PROP_READ;
+static const uint8_t devInfoSerialNumber[] = "Serial Number";
 
 // Firmware Revision String characteristic
-static uint8       devInfoFirmwareRevProps = GATT_PROP_READ;
-static const uint8 devInfoFirmwareRev[] = "Firmware Revision";
+static uint8_t       devInfoFirmwareRevProps = GATT_PROP_READ;
+static const uint8_t devInfoFirmwareRev[] = "Firmware Revision";
 
 // Hardware Revision String characteristic
-static uint8       devInfoHardwareRevProps = GATT_PROP_READ;
-static const uint8 devInfoHardwareRev[] = "Hardware Revision";
+static uint8_t       devInfoHardwareRevProps = GATT_PROP_READ;
+static const uint8_t devInfoHardwareRev[] = "Hardware Revision";
 
 // Software Revision String characteristic
-static uint8       devInfoSoftwareRevProps = GATT_PROP_READ;
-static const uint8 devInfoSoftwareRev[] = "Software Revision";
+static uint8_t       devInfoSoftwareRevProps = GATT_PROP_READ;
+static const uint8_t devInfoSoftwareRev[] = "Software Revision";
 
 // Manufacturer Name String characteristic
-static uint8       devInfoMfrNameProps = GATT_PROP_READ;
-static const uint8 devInfoMfrName[] = "Manufacturer Name";
+static uint8_t       devInfoMfrNameProps = GATT_PROP_READ;
+static const uint8_t devInfoMfrName[] = "Manufacturer Name";
 
 // IEEE 11073-20601 Regulatory Certification Data List characteristic
-static uint8       devInfo11073CertProps = GATT_PROP_READ;
-static const uint8 devInfo11073Cert[] = {
+static uint8_t       devInfo11073CertProps = GATT_PROP_READ;
+static const uint8_t devInfo11073Cert[] = {
     DEVINFO_11073_BODY_EXP, // authoritative body type
     0x00,                   // authoritative body structure type
                             // authoritative body data follows below:
     'e', 'x', 'p', 'e', 'r', 'i', 'm', 'e', 'n', 't', 'a', 'l'};
 
 // System ID characteristic
-static uint8 devInfoPnpIdProps = GATT_PROP_READ;
-static uint8 devInfoPnpId[DEVINFO_PNP_ID_LEN] = {
+static uint8_t devInfoPnpIdProps = GATT_PROP_READ;
+static uint8_t devInfoPnpId[DEVINFO_PNP_ID_LEN] = {
     1,                                    // Vendor ID source (1=Bluetooth SIG)
     LO_UINT16(0x07D7), HI_UINT16(0x07D7), // Vendor ID (WCH)
     LO_UINT16(0x0000), HI_UINT16(0x0000), // Product ID (vendor-specific)
@@ -145,7 +146,7 @@ static gattAttribute_t devInfoAttrTbl[] = {
         {ATT_BT_UUID_SIZE, primaryServiceUUID}, /* type */
         GATT_PERMIT_READ,                       /* permissions */
         0,                                      /* handle */
-        (uint8 *)&devInfoService                /* pValue */
+        (uint8_t *)&devInfoService                /* pValue */
     },
 
     // System ID Declaration
@@ -160,7 +161,7 @@ static gattAttribute_t devInfoAttrTbl[] = {
         {ATT_BT_UUID_SIZE, devInfoSystemIdUUID},
         GATT_PERMIT_READ,
         0,
-        (uint8 *)devInfoSystemId},
+        (uint8_t *)devInfoSystemId},
 
     // Model Number String Declaration
     {
@@ -174,7 +175,7 @@ static gattAttribute_t devInfoAttrTbl[] = {
         {ATT_BT_UUID_SIZE, devInfoModelNumberUUID},
         GATT_PERMIT_READ,
         0,
-        (uint8 *)devInfoModelNumber},
+        (uint8_t *)devInfoModelNumber},
 
     // Serial Number String Declaration
     {
@@ -188,7 +189,7 @@ static gattAttribute_t devInfoAttrTbl[] = {
         {ATT_BT_UUID_SIZE, devInfoSerialNumberUUID},
         GATT_PERMIT_READ,
         0,
-        (uint8 *)devInfoSerialNumber},
+        (uint8_t *)devInfoSerialNumber},
 
     // Firmware Revision String Declaration
     {
@@ -202,7 +203,7 @@ static gattAttribute_t devInfoAttrTbl[] = {
         {ATT_BT_UUID_SIZE, devInfoFirmwareRevUUID},
         GATT_PERMIT_READ,
         0,
-        (uint8 *)devInfoFirmwareRev},
+        (uint8_t *)devInfoFirmwareRev},
 
     // Hardware Revision String Declaration
     {
@@ -216,7 +217,7 @@ static gattAttribute_t devInfoAttrTbl[] = {
         {ATT_BT_UUID_SIZE, devInfoHardwareRevUUID},
         GATT_PERMIT_READ,
         0,
-        (uint8 *)devInfoHardwareRev},
+        (uint8_t *)devInfoHardwareRev},
 
     // Software Revision String Declaration
     {
@@ -230,7 +231,7 @@ static gattAttribute_t devInfoAttrTbl[] = {
         {ATT_BT_UUID_SIZE, devInfoSoftwareRevUUID},
         GATT_PERMIT_READ,
         0,
-        (uint8 *)devInfoSoftwareRev},
+        (uint8_t *)devInfoSoftwareRev},
 
     // Manufacturer Name String Declaration
     {
@@ -244,7 +245,7 @@ static gattAttribute_t devInfoAttrTbl[] = {
         {ATT_BT_UUID_SIZE, devInfoMfrNameUUID},
         GATT_PERMIT_READ,
         0,
-        (uint8 *)devInfoMfrName},
+        (uint8_t *)devInfoMfrName},
 
     // IEEE 11073-20601 Regulatory Certification Data List Declaration
     {
@@ -258,7 +259,7 @@ static gattAttribute_t devInfoAttrTbl[] = {
         {ATT_BT_UUID_SIZE, devInfo11073CertUUID},
         GATT_PERMIT_READ,
         0,
-        (uint8 *)devInfo11073Cert},
+        (uint8_t *)devInfo11073Cert},
 
     // PnP ID Declaration
     {
@@ -272,13 +273,13 @@ static gattAttribute_t devInfoAttrTbl[] = {
         {ATT_BT_UUID_SIZE, devInfoPnpIdUUID},
         GATT_PERMIT_READ,
         0,
-        (uint8 *)devInfoPnpId}};
+        (uint8_t *)devInfoPnpId}};
 
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
-static bStatus_t devInfo_ReadAttrCB(uint16 connHandle, gattAttribute_t *pAttr,
-                                    uint8 *pValue, uint16 *pLen, uint16 offset, uint16 maxLen, uint8 method);
+static bStatus_t devInfo_ReadAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
+                                    uint8_t *pValue, uint16_t *pLen, uint16_t offset, uint16_t maxLen, uint8_t method);
 
 /*********************************************************************
  * PROFILE CALLBACKS
@@ -324,12 +325,12 @@ bStatus_t DevInfo_AddService(void)
  * @param   len - length of data to write
  * @param   value - pointer to data to write.  This is dependent on
  *          the parameter ID and WILL be cast to the appropriate
- *          data type (example: data type of uint16 will be cast to
- *          uint16 pointer).
+ *          data type (example: data type of uint16_t will be cast to
+ *          uint16_t pointer).
  *
  * @return  bStatus_t
  */
-bStatus_t DevInfo_SetParameter(uint8 param, uint8 len, void *value)
+bStatus_t DevInfo_SetParameter(uint8_t param, uint8_t len, void *value)
 {
     bStatus_t ret = SUCCESS;
 
@@ -355,12 +356,12 @@ bStatus_t DevInfo_SetParameter(uint8 param, uint8 len, void *value)
  * @param   param - Profile parameter ID
  * @param   value - pointer to data to get.  This is dependent on
  *          the parameter ID and WILL be cast to the appropriate
- *          data type (example: data type of uint16 will be cast to
- *          uint16 pointer).
+ *          data type (example: data type of uint16_t will be cast to
+ *          uint16_t pointer).
  *
  * @return  bStatus_t
  */
-bStatus_t DevInfo_GetParameter(uint8 param, void *value)
+bStatus_t DevInfo_GetParameter(uint8_t param, void *value)
 {
     bStatus_t ret = SUCCESS;
 
@@ -423,11 +424,11 @@ bStatus_t DevInfo_GetParameter(uint8 param, void *value)
  *
  * @return      Success or Failure
  */
-static bStatus_t devInfo_ReadAttrCB(uint16 connHandle, gattAttribute_t *pAttr,
-                                    uint8 *pValue, uint16 *pLen, uint16 offset, uint16 maxLen, uint8 method)
+static bStatus_t devInfo_ReadAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
+                                    uint8_t *pValue, uint16_t *pLen, uint16_t offset, uint16_t maxLen, uint8_t method)
 {
     bStatus_t status = SUCCESS;
-    uint16    uuid = BUILD_UINT16(pAttr->type.uuid[0], pAttr->type.uuid[1]);
+    uint16_t    uuid = BUILD_UINT16(pAttr->type.uuid[0], pAttr->type.uuid[1]);
 
     switch(uuid)
     {

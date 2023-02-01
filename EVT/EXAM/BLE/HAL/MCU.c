@@ -213,19 +213,19 @@ tmosEvents HAL_ProcessEvent(tmosTaskID task_id, tmosEvents events)
  */
 void HAL_Init()
 {
-    halTaskID = TMOS_ProcessEventRegister(HAL_ProcessEvent);
+    //halTaskID = TMOS_ProcessEventRegister(HAL_ProcessEvent);
     HAL_TimeInit();
 #if(defined HAL_SLEEP) && (HAL_SLEEP == TRUE)
-    HAL_SleepInit();
+    //HAL_SleepInit();
 #endif
 #if(defined HAL_LED) && (HAL_LED == TRUE)
-    HAL_LedInit();
+    //HAL_LedInit();
 #endif
 #if(defined HAL_KEY) && (HAL_KEY == TRUE)
-    HAL_KeyInit();
+    //HAL_KeyInit();
 #endif
 #if(defined BLE_CALIBRATION_ENABLE) && (BLE_CALIBRATION_ENABLE == TRUE)
-    tmos_start_task(halTaskID, HAL_REG_INIT_EVENT, MS1_TO_SYSTEM_TIME(BLE_CALIBRATION_PERIOD)); // 添加校准任务，单次校准耗时小于10ms
+    //tmos_start_task(halTaskID, HAL_REG_INIT_EVENT, MS1_TO_SYSTEM_TIME(BLE_CALIBRATION_PERIOD)); // 添加校准任务，单次校准耗时小于10ms
 #endif
     //  tmos_start_task( halTaskID, HAL_TEST_EVENT, 1600 );    // 添加一个测试任务
 }

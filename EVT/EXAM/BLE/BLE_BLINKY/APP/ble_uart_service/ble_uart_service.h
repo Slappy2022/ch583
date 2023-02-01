@@ -55,11 +55,8 @@ typedef void (*ble_uart_ProfileChangeCB_t)(uint16_t connection_handle, ble_uart_
  *                     contain more than one service.
  */
 
-extern bStatus_t ble_uart_add_service(ble_uart_ProfileChangeCB_t cb);
+bStatus_t ble_uart_add_service(ble_uart_ProfileChangeCB_t cb);
 
-extern uint8 ble_uart_notify_is_ready(uint16 connHandle);
-
-extern bStatus_t ble_uart_notify(uint16 connHandle, attHandleValueNoti_t *pNoti, uint8 taskId);
 /*********************************************************************
 *********************************************************************/
 

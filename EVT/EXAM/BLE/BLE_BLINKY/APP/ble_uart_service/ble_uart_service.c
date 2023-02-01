@@ -14,8 +14,7 @@
  * INCLUDES
  */
 
-#include "config.h"
-#include "gattprofile.h"
+#include "CH58xBLE_LIB.h"
 #include "stdint.h"
 #include "ble_uart_service.h"
 
@@ -51,15 +50,15 @@
 //{0x16,0x96,0x24,0x47,0xc6,0x23, 0x61,0xba,0xd9,0x4b,0x4d,0x1e,0x43,0x53,0x53,0x49};
 
 // ble_uart GATT Profile Service UUID
-CONST uint8 ble_uart_ServiceUUID[ATT_UUID_SIZE] =
+const uint8 ble_uart_ServiceUUID[ATT_UUID_SIZE] =
     {0x9F, 0xCA, 0xDC, 0x24, 0x0E, 0xE5, 0xA9, 0xE0, 0x93, 0xF3, 0xA3, 0xB5, 0x01, 0x00, 0x40, 0x6E};
 
 // Characteristic rx uuid
-CONST uint8 ble_uart_RxCharUUID[ATT_UUID_SIZE] =
+const uint8 ble_uart_RxCharUUID[ATT_UUID_SIZE] =
     {0x9F, 0xCA, 0xDC, 0x24, 0x0E, 0xE5, 0xA9, 0xE0, 0x93, 0xF3, 0xA3, 0xB5, 0x02, 0x00, 0x40, 0x6E};
 
 // Characteristic tx uuid
-CONST uint8 ble_uart_TxCharUUID[ATT_UUID_SIZE] =
+const uint8 ble_uart_TxCharUUID[ATT_UUID_SIZE] =
     {0x9F, 0xCA, 0xDC, 0x24, 0x0E, 0xE5, 0xA9, 0xE0, 0x93, 0xF3, 0xA3, 0xB5, 0x03, 0x00, 0x40, 0x6E};
 
 /*********************************************************************
@@ -81,7 +80,7 @@ static ble_uart_ProfileChangeCB_t ble_uart_AppCBs = NULL;
  */
 
 // Profile Service attribute
-static CONST gattAttrType_t ble_uart_Service = {ATT_UUID_SIZE, ble_uart_ServiceUUID};
+static const gattAttrType_t ble_uart_Service = {ATT_UUID_SIZE, ble_uart_ServiceUUID};
 
 // Profile Characteristic 1 Properties
 //static uint8 ble_uart_RxCharProps = GATT_PROP_WRITE_NO_RSP| GATT_PROP_WRITE;
@@ -90,13 +89,6 @@ static uint8 ble_uart_RxCharProps = GATT_PROP_WRITE_NO_RSP;
 // Characteristic 1 Value
 static uint8 ble_uart_RxCharValue[BLE_UART_RX_BUFF_SIZE];
 //static uint8 ble_uart_RxCharValue[1];
-
-// Profile Characteristic 2 Properties
-//static uint8 ble_uart_TxCharProps = GATT_PROP_NOTIFY| GATT_PROP_INDICATE;
-static uint8 ble_uart_TxCharProps = GATT_PROP_NOTIFY;
-
-// Characteristic 2 Value
-static uint8 ble_uart_TxCharValue = 0;
 
 // Simple Profile Characteristic 2 User Description
 static gattCharCfg_t ble_uart_TxCCCD[4];
@@ -127,20 +119,6 @@ static gattAttribute_t ble_uart_ProfileAttrTbl[] = {
         GATT_PERMIT_WRITE,
         0,
         &ble_uart_RxCharValue[0]},
-
-    // Characteristic 2 Declaration
-    {
-        {ATT_BT_UUID_SIZE, characterUUID},
-        GATT_PERMIT_READ,
-        0,
-        &ble_uart_TxCharProps},
-
-    // Characteristic Value 2
-    {
-        {ATT_UUID_SIZE, ble_uart_TxCharUUID},
-        0,
-        0,
-        (uint8 *)&ble_uart_TxCharValue},
 
     // Characteristic 2 User Description
     {
@@ -201,8 +179,6 @@ bStatus_t ble_uart_add_service(ble_uart_ProfileChangeCB_t cb)
                                          GATT_NUM_ATTRS(ble_uart_ProfileAttrTbl),
                                          GATT_MAX_ENCRYPT_KEY_SIZE,
                                          &ble_uart_ProfileCBs);
-    if(status != SUCCESS)
-        PRINT("Add ble uart service failed!\n");
     ble_uart_AppCBs = cb;
 
     return (status);
@@ -226,7 +202,6 @@ static bStatus_t ble_uart_ReadAttrCB(uint16 connHandle, gattAttribute_t *pAttr,
                                      uint8 *pValue, uint16 *pLen, uint16 offset, uint16 maxLen, uint8 method)
 {
     bStatus_t status = SUCCESS;
-    PRINT("ReadAttrCB\n");
 
     // Make sure it's not a blob operation (no attributes in the profile are long)
     if(pAttr->type.len == ATT_BT_UUID_SIZE)
@@ -245,10 +220,6 @@ static bStatus_t ble_uart_ReadAttrCB(uint16 connHandle, gattAttribute_t *pAttr,
         {
             *pLen = 1;
             pValue[0] = '1';
-        }
-        else if(tmos_memcmp(pAttr->type.uuid, ble_uart_RxCharUUID, 16))
-        {
-            PRINT("read tx char\n");
         }
     }
 
@@ -294,7 +265,6 @@ static bStatus_t ble_uart_WriteAttrCB(uint16 connHandle, gattAttribute_t *pAttr,
                 uint16         charCfg = BUILD_UINT16(pValue[0], pValue[1]);
                 ble_uart_evt_t evt;
 
-                //PRINT("CCCD set: [%d]\n", charCfg);
                 evt.type = (charCfg == GATT_CFG_NO_OPERATION) ? BLE_UART_EVT_TX_NOTI_DISABLED : BLE_UART_EVT_TX_NOTI_ENABLED;
                 ble_uart_AppCBs(connHandle, &evt);
             }
@@ -340,40 +310,8 @@ static void ble_uart_HandleConnStatusCB(uint16 connHandle, uint8 changeType)
         {
             //ble_uart_TxCCCD[0].value = 0;
             GATTServApp_InitCharCfg(connHandle, ble_uart_TxCCCD);
-            //PRINT("clear client configuration\n");
         }
     }
-}
-
-uint8 ble_uart_notify_is_ready(uint16 connHandle)
-{
-    return (GATT_CLIENT_CFG_NOTIFY == GATTServApp_ReadCharCfg(connHandle, ble_uart_TxCCCD));
-}
-/*********************************************************************
- * @fn          BloodPressure_IMeasNotify
- *
- * @brief       Send a notification containing a bloodPressure
- *              measurement.
- *
- * @param       connHandle - connection handle
- * @param       pNoti - pointer to notification structure
- *
- * @return      Success or Failure
- */
-bStatus_t ble_uart_notify(uint16 connHandle, attHandleValueNoti_t *pNoti, uint8 taskId)
-{
-    //uint16 value = ble_uart_TxCCCD[0].value;
-    uint16 value = GATTServApp_ReadCharCfg(connHandle, ble_uart_TxCCCD);
-    // If notifications enabled
-    if(value & GATT_CLIENT_CFG_NOTIFY)
-    {
-        // Set the handle
-        pNoti->handle = ble_uart_ProfileAttrTbl[RAWPASS_TX_VALUE_HANDLE].handle;
-
-        // Send the Indication
-        return GATT_Notification(connHandle, pNoti, FALSE);
-    }
-    return bleIncorrectMode;
 }
 
 /*********************************************************************

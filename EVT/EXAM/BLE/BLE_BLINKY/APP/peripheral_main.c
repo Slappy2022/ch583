@@ -12,40 +12,27 @@
 
 /******************************************************************************/
 /* 头文件包含 */
-#include "config.h"
-#include "HAL.h"
-#include "gattprofile.h"
+//#include "config.h"
+//#include "HAL.h"
+//#include "gattprofile.h"
+//#include "CH58x_common.h"
+
+// Needed for sys
+#ifndef  SAFEOPERATE
+#define  SAFEOPERATE   __nop();__nop()
+#endif
+#include <stdint.h>      // Needed for gpio and sys
+#include "compat.h"
+#include "CH58xBLE_LIB.h"
 #include "peripheral.h"
 
 /*********************************************************************
  * GLOBAL TYPEDEFS
  */
-__attribute__((aligned(4))) u32 MEM_BUF[BLE_MEMHEAP_SIZE / 4];
-
-#if(defined(BLE_MAC)) && (BLE_MAC == TRUE)
-u8C MacAddr[6] = {0x84, 0xC2, 0xE4, 0x03, 0x02, 0x02};
+#ifndef BLE_MEMHEAP_SIZE
+#define BLE_MEMHEAP_SIZE                    (1024*6)
 #endif
-
-extern void app_uart_process(void);
-extern void app_uart_init(void);
-
-/*******************************************************************************
- * Function Name  : Main_Circulation
- * Description    : 主循环
- * Input          : None
- * Output         : None
- * Return         : None
- *******************************************************************************/
-__HIGH_CODE
-__attribute__((noinline))
-void Main_Circulation()
-{
-    while(1)
-    {
-        TMOS_SystemProcess();
-        app_uart_process();
-    }
-}
+__attribute__((aligned(4))) u32 MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 
 /*******************************************************************************
  * Function Name  : main
@@ -56,22 +43,24 @@ void Main_Circulation()
  *******************************************************************************/
 int main(void)
 {
-    SetSysClock(CLK_SOURCE_PLL_60MHz);
-#ifdef DEBUG
-    GPIOA_SetBits(bTXD1);
-    GPIOA_ModeCfg(bTXD1, GPIO_ModeOut_PP_5mA);
-    UART1_DefInit();
-#endif
-    PRINT("%s\n", VER_LIB);
-    GPIOB_ModeCfg(GPIO_Pin_4, GPIO_ModeOut_PP_5mA);
-    GPIOB_SetBits(GPIO_Pin_4);
-    CH58X_BLEInit();
-    HAL_Init();
+    compat_SetSysClock();
+		compat_LedInit();
+		compat_LedToggle();
+
+    compat_CH58X_BLEInit();
+    compat_HAL_TimeInit();
+
+    // CH58xBLE_LIB.h
     GAPRole_PeripheralInit();
+
+    // peripheral.h
     Peripheral_Init();
-    app_uart_init();
-    UART3_SendString("Hello, World!\r\n", 15);
-    Main_Circulation();
+
+    while(1)
+    {
+        // CH58xBLE_LIB.h
+        TMOS_SystemProcess();
+    }
 }
 
 /******************************** endfile @ main ******************************/
