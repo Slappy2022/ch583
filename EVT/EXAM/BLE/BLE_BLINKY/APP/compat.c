@@ -16,6 +16,7 @@ void compat_Init(void) {
 #ifndef BLE_MEMHEAP_SIZE
 #define BLE_MEMHEAP_SIZE                    (1024*6)
 #endif
+__attribute__((aligned(4))) u32 MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 #ifndef BLE_BUFF_MAX_LEN
 #define BLE_BUFF_MAX_LEN                    27
 #endif

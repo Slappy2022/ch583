@@ -17,14 +17,6 @@
 #include "CH58xBLE_LIB.h"
 #include "peripheral.h"
 
-/*********************************************************************
- * GLOBAL TYPEDEFS
- */
-#ifndef BLE_MEMHEAP_SIZE
-#define BLE_MEMHEAP_SIZE                    (1024*6)
-#endif
-__attribute__((aligned(4))) u32 MEM_BUF[BLE_MEMHEAP_SIZE / 4];
-
 /*******************************************************************************
  * Function Name  : main
  * Description    : Ö÷º¯Êý
