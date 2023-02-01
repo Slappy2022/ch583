@@ -12,16 +12,7 @@
 
 /******************************************************************************/
 /* 头文件包含 */
-//#include "config.h"
-//#include "HAL.h"
-//#include "gattprofile.h"
-//#include "CH58x_common.h"
 
-// Needed for sys
-#ifndef  SAFEOPERATE
-#define  SAFEOPERATE   __nop();__nop()
-#endif
-#include <stdint.h>      // Needed for gpio and sys
 #include "compat.h"
 #include "CH58xBLE_LIB.h"
 #include "peripheral.h"
@@ -43,16 +34,8 @@ __attribute__((aligned(4))) u32 MEM_BUF[BLE_MEMHEAP_SIZE / 4];
  *******************************************************************************/
 int main(void)
 {
-    compat_SetSysClock();
-		compat_LedInit();
-		compat_LedToggle();
-
-    compat_CH58X_BLEInit();
-    compat_HAL_TimeInit();
-
-    // CH58xBLE_LIB.h
-    GAPRole_PeripheralInit();
-
+    // compat.h
+    compat_Init();
     // peripheral.h
     Peripheral_Init();
 

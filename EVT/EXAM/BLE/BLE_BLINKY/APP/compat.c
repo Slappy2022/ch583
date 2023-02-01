@@ -3,6 +3,16 @@
 #include "CH583SFR.h"
 #include "ISP583.h"
 
+
+void compat_Init(void) {
+    compat_SetSysClock();
+		compat_LedInit();
+		compat_LedToggle();
+    compat_CH58X_BLEInit();
+    compat_HAL_TimeInit();
+    GAPRole_PeripheralInit();
+}
+
 #ifndef BLE_MEMHEAP_SIZE
 #define BLE_MEMHEAP_SIZE                    (1024*6)
 #endif

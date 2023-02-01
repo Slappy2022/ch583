@@ -5,11 +5,8 @@
 extern "C" {
 #endif
 
-void compat_LedInit(void);
+void compat_Init(void);
 void compat_LedToggle(void);
-void compat_CH58X_BLEInit(void);
-void compat_HAL_TimeInit(void);
-void compat_SetSysClock(void);
 
 #ifdef __cplusplus
 }
