@@ -10,10 +10,10 @@ main() {
   local -r app=$1
   "${BASE_DIR}"/scripts/build.sh "${app}"
   wchisp flash "${BASE_DIR}/Build/$1.elf"
-  while :; do
-    sleep 0.5
-    "${BASE_DIR}"/scripts/ble.sh
-  done
+#  while :; do
+#    sleep 0.5
+#    "${BASE_DIR}"/scripts/ble.sh
+#  done
 }
 
 main "$@"
