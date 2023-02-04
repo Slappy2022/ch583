@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include "CH58xBLE_LIB.h"
 #include "CH583SFR.h"
-#include "ISP583.h"
 
 
 void compat_Init(void) {
@@ -37,9 +36,11 @@ __attribute__((aligned(4))) u32 MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 #endif
 extern uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 
+/*
 #ifndef BLE_SNV
 #define BLE_SNV                             TRUE
 #endif
+*/
 #ifndef CLK_OSC32K
 #define CLK_OSC32K                          1   // 该项请勿在此修改，必须在工程配置里的预处理中修改，如包含主机角色必须使用外部32K
 #endif
@@ -52,9 +53,11 @@ extern uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 #ifndef BLE_MAC
 #define BLE_MAC                             FALSE
 #endif
+/*
 #ifndef BLE_SNV_ADDR
 #define BLE_SNV_ADDR                        0x77E00-FLASH_ROM_MAX_SIZE
 #endif
+*/
 #ifdef CLK_OSC32K
 #if ( CLK_OSC32K == 1 )
 #define CAB_LSIFQ       32000
@@ -392,8 +395,8 @@ void compat_CH58X_BLEInit(void)
     }
 #else
     {
-        uint8_t MacAddr[6];
-        GetMACAddress(MacAddr);
+        uint8_t MacAddr[6] = {0x5A, 0xFF, 0xCC, 0x26, 0x3B, 0x38,};
+        //GetMACAddress(MacAddr);
         for(i = 0; i < 6; i++)
         {
             cfg.MacAddr[i] = MacAddr[i]; // Ê¹ÓÃÐ¾Æ¬macµØÖ·

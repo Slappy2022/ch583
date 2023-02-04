@@ -66,7 +66,7 @@ $(OUTPUT_DIR)/service/%.o: $(SERVICE_DIR)/%.c
 $(ELF_FILE): $(STARTUP_OBJS) $(USER_OBJS) $(PROFILE_OBJS) $(SERVICE_OBJS)
 	$(TOOL_CHAIN_PATH)/riscv-none-elf-gcc $(CCFLAGS) -T $(LD_FILE) -nostartfiles -Xlinker --gc-sections -Wl,-Map,$(MAP_FILE) --specs=nano.specs --specs=nosys.specs \
 		-o $(ELF_FILE) $(USER_OBJS) $(STARTUP_OBJS) $(PROFILE_OBJS) $(SERVICE_OBJS) \
-		-L$(LIB2_DIR) -lISP583 -lCH58xBLE
+		-L$(LIB2_DIR) -lCH58xBLE
 
 $(HEX_FILE): $(ELF_FILE)
 	$(TOOL_CHAIN_PATH)/riscv-none-elf-objcopy -O ihex $(ELF_FILE) $(HEX_FILE)
